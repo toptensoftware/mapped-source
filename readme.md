@@ -48,7 +48,7 @@ let originalPos = ms.fromOffset(1000);
 ## Editing
 
 To edit a source mapped file, first load it as described above
-then all `createEditable()` to get an `EditableMappedSource`
+then call `createEditable()` to get an `EditableMappedSource`
 
 ```js
 let ems = MappedSource.fromFile("test.js").createEditable();
@@ -56,6 +56,7 @@ let ems = MappedSource.fromFile("test.js").createEditable();
 
 `EditableMappedSource` supports:
 
+* `code` - the current code content
 * `substring(start, end)` - returns a new `EditableMappedSource`
   with a subsection of the original string and cropped mapped points
 * `splice(offset, length, str)` - replaces `length` characters at
@@ -63,7 +64,11 @@ let ems = MappedSource.fromFile("test.js").createEditable();
 * `insert(offset, str)` - inserts `str` at `offset`.
 * `delete(offset, length)` - deletes `length` characters at `offset`.
 * `append(str)` - appends `str`.
-* `save(filename)` - saves the file and source map
+* `createSourceMap()` - create a JSON serializable source map object
+* `save(filename)` - saves the file and updated source map
+
+All edit operations update both the original code string and any
+affected mapped points.
 
 Note that `splice`, `insert` and `append` can accept either a `string`
 or another `EditableMappedSource` as the string content parameter.  If

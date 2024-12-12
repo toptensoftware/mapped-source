@@ -1,6 +1,6 @@
 import fs from 'node:fs';
 import path from 'node:path';
-import { SourceMapConsumer, SourceMapGenerator } from "@jridgewell/source-map";
+import { SourceMapGenerator } from "@jridgewell/source-map";
 import { binarySearch } from '@toptensoftware/binary-search';
 import { LineMap } from "@toptensoftware/line-map";
 
@@ -24,13 +24,34 @@ export class EditableMappedSource
 {
     /**
      * Constructs a new EditableMappedSource
-     * @param {string} source
+     * @param {string} code
      * @param {MappedPoint[]} map
      */
-    constructor(source, map)
+    constructor(code, map)
     {
-        this.source = source ?? "";
+        this.code = code ?? "";
         this.map = map ?? [];
+    }
+
+    createSourceMap()
+    {
+        // Create line map
+        let lm = new LineMap(this.code, { lineBase: 1 });
+
+        // Generate mapping
+        let smg = new SourceMapGenerator({});
+
+        // Add mappings
+        for (let m of this.map)
+        {
+            smg.addMapping({
+                generated: lm.fromOffset(m.offset),
+                source: m.source,
+                original: { line: m.originalLine, column: m.originalColumn },
+                name: m.name
+            });
+        }
+        return smg.toJSON();
     }
 
     /**
@@ -43,31 +64,13 @@ export class EditableMappedSource
 
         // Update the source mapping url
         let finalSource = 
-            this.source.replace(/\n*\/\/# sourceMappingURL=(.*)$/m, "") + 
+            this.code.replace(/\n*\/\/# sourceMappingURL=(.*)$/m, "") + 
             `\n//# sourceMappingURL=${mapfile}\n`;
 
         fs.writeFileSync(filename, finalSource, "utf8");
 
-        // Create line map
-        let lm = new LineMap(this.source, { lineBase: 1});
-
-        // Generate mapping
-        let smg = new SourceMapGenerator({
-            file: filename,
-            sourceRoot: "",
-        });
-
-        // Add mappings
-        for (let m of this.map)
-        {
-            smg.addMapping({
-                generated: lm.fromOffset(m.offset),
-                source: m.source,
-                original: { line: m.originalLine, column: m.originalColumn },
-                name: m.name
-            });
-        }
-        let json = smg.toJSON();
+        let json = this.createSourceMap();
+        json.file = filename;
         fs.writeFileSync(mapfile, JSON.stringify(json, null, 2), "utf8");
     }
 
@@ -80,7 +83,7 @@ export class EditableMappedSource
      */
     substring(start, end)
     {
-        let source = this.source.substring(start, end);
+        let code = this.code.substring(start, end);
         let map = this.map
             .filter(x => x.offset >= start && x.offset <= end)
             .map(x => {
@@ -89,7 +92,7 @@ export class EditableMappedSource
                 return n;
             });
 
-        return new EditableMappedSource(source, map);
+        return new EditableMappedSource(code, map);
     }
 
     /**
@@ -103,7 +106,7 @@ export class EditableMappedSource
     {
         if (offset < 0)
             throw new Error("invalid splice offset");
-        if (offset + length > this.source.length)
+        if (offset + length > this.code.length)
             throw new Error("invalid splice end offset");
             
         // Is it a map?
@@ -111,14 +114,14 @@ export class EditableMappedSource
         if (string instanceof EditableMappedSource)
         {
             map = string.map;
-            string = string.source;
+            string = string.code;
         }
 
         // Update the string
-        this.source = 
-            this.source.substring(0, offset) 
+        this.code = 
+            this.code.substring(0, offset) 
             + string 
-            + this.source.substring(offset + length);
+            + this.code.substring(offset + length);
 
         // Update the map
         for (let i=0; i<this.map.length; i++)
@@ -187,7 +190,7 @@ export class EditableMappedSource
      */
     append(str)
     {
-        this.splice(this.source.length, 0, str);
+        this.splice(this.code.length, 0, str);
     }
 
 }

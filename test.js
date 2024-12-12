@@ -12,7 +12,7 @@ test("slice", () => {
     ]);
 
     let w = ms.substring(6, 11);
-    assert.equal(w.source, "World");
+    assert.equal(w.code, "World");
     assert.equal(w.map.length, 2);
     assert.equal(w.map[0].offset, 0);
     assert.equal(w.map[1].offset, 5);
@@ -27,7 +27,7 @@ test("insert before", () => {
     ]);
 
     let w = ms.insert(0, "!!!!!");
-    assert.equal(ms.source, "!!!!!Hello World!");
+    assert.equal(ms.code, "!!!!!Hello World!");
     assert.equal(ms.map.length, 2);
     assert.equal(ms.map[0].offset, 11);
     assert.equal(ms.map[1].offset, 16);
@@ -41,7 +41,7 @@ test("insert at", () => {
     ]);
 
     let w = ms.insert(6, "!!!!!");
-    assert.equal(ms.source, "Hello !!!!!World!");
+    assert.equal(ms.code, "Hello !!!!!World!");
     assert.equal(ms.map.length, 2);
     assert.equal(ms.map[0].offset, 11);
     assert.equal(ms.map[1].offset, 16);
@@ -55,7 +55,7 @@ test("insert inside", () => {
     ]);
 
     let w = ms.insert(8, "!!!!!");
-    assert.equal(ms.source, "Hello Wo!!!!!rld!");
+    assert.equal(ms.code, "Hello Wo!!!!!rld!");
     assert.equal(ms.map.length, 2);
     assert.equal(ms.map[0].offset, 6);
     assert.equal(ms.map[1].offset, 16);
@@ -69,7 +69,7 @@ test("insert at end", () => {
     ]);
 
     let w = ms.insert(11, "!!!!!");
-    assert.equal(ms.source, "Hello World!!!!!!");
+    assert.equal(ms.code, "Hello World!!!!!!");
     assert.equal(ms.map.length, 2);
     assert.equal(ms.map[0].offset, 6);
     assert.equal(ms.map[1].offset, 16);
@@ -83,7 +83,7 @@ test("insert after", () => {
     ]);
 
     let w = ms.insert(12, "!!!!!");
-    assert.equal(ms.source, "Hello World!!!!!!");
+    assert.equal(ms.code, "Hello World!!!!!!");
     assert.equal(ms.map.length, 2);
     assert.equal(ms.map[0].offset, 6);
     assert.equal(ms.map[1].offset, 11);
@@ -97,7 +97,7 @@ test("delete before", () => {
     ]);
 
     let w = ms.delete(0, 5);
-    assert.equal(ms.source, " World!");
+    assert.equal(ms.code, " World!");
     assert.equal(ms.map.length, 2);
     assert.equal(ms.map[0].offset, 1);
     assert.equal(ms.map[1].offset, 6);
@@ -111,7 +111,7 @@ test("delete at", () => {
     ]);
 
     let w = ms.delete(0, 6);
-    assert.equal(ms.source, "World!");
+    assert.equal(ms.code, "World!");
     assert.equal(ms.map.length, 2);
     assert.equal(ms.map[0].offset, 0);
     assert.equal(ms.map[1].offset, 5);
@@ -125,7 +125,7 @@ test("delete over one", () => {
     ]);
 
     let w = ms.delete(3, 6);
-    assert.equal(ms.source, "Helld!");
+    assert.equal(ms.code, "Helld!");
     assert.equal(ms.map.length, 1);
     assert.equal(ms.map[0].offset, 5);
 });
@@ -138,7 +138,7 @@ test("delete over multiple", () => {
     ]);
 
     let w = ms.delete(3, 9);
-    assert.equal(ms.source, "Hel");
+    assert.equal(ms.code, "Hel");
     assert.equal(ms.map.length, 0);
 });
 
@@ -154,7 +154,7 @@ test("insert mapped", () => {
     ]);
 
     let w = ms.insert(6, ms2);
-    assert.equal(ms.source, "Hello there World!");
+    assert.equal(ms.code, "Hello there World!");
     assert.equal(ms.map.length, 4);
     assert.equal(ms.map[0].offset, 6);
     assert.equal(ms.map[0].name, "there start");
