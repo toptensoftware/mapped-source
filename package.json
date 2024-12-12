@@ -1,0 +1,24 @@
+{
+  "name": "@toptensoftware/mapped-source",
+  "version": "0.0.5",
+  "description": "Tools for reading and creating source-mapped files",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {},
+  "author": "Topten Software",
+  "contributors": [
+    {
+      "name": "Brad Robinson",
+      "email": "contact@toptensoftware.com"
+    }
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/toptensoftware/mapped-source.git"
+  },
+  "license": "Apache-2.0",
+  "dependencies": {
+    "@jridgewell/source-map": "^0.3.6",
+    "@toptensoftware/line-map": "github:toptensoftware/line-map"
+  }
+}

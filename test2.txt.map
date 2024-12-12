@@ -1,0 +1,16 @@
+{
+  "version": 3,
+  "file": "test2.txt",
+  "names": [
+    "world start",
+    "world end"
+  ],
+  "sources": [
+    "original.txt"
+  ],
+  "sourcesContent": [
+    null
+  ],
+  "mappings": "MAUgBA,KAAKC",
+  "ignoreList": []
+}
